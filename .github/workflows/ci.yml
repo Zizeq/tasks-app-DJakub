@@ -10,23 +10,20 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [tasks-api, title-normalizer]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
-      - name: Test Tasks API
-        working-directory: services/tasks-api
-        run: |
-          pip install -r requirements.txt
-          pytest
-
-      - name: Test Title Normalizer
-        working-directory: services/title-normalizer
+      - name: Test ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
         run: |
           pip install -r requirements.txt
           pytest
