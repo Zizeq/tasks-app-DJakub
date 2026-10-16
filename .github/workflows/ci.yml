@@ -31,7 +31,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-        name: ${{ matrix.service }}-test-report
-        path: ${{ matrix.service }}-test-report.txt
+          name: ${{ matrix.service }}-test-report
+          path: ${{ matrix.service }}-test-report.txt
 
 #strategy: matrix: service: [tasks-api, title-normalizer] steps: - uses: actions/checkout@v4 - name: Set up Python uses: actions/setup-python@v5 with: python-version: '3.12' run: pip intall -r services/${{ matrix.service }}/requirements.txt run: pytest services/${{ matrix.service }}
