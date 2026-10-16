@@ -1,0 +1,32 @@
+name: Test-n-scan
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Test Tasks API
+        working-directory: services/tasks-api
+        run: |
+          pip install -r requirements.txt
+          pytest
+
+      - name: Test Title Normalizer
+        working-directory: services/title-normalizer
+        run: |
+          pip install -r requirements.txt
+          pytest
