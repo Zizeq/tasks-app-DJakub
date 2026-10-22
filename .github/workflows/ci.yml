@@ -37,26 +37,47 @@ jobs:
   deploy:
     needs: run_tests
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       pages: write
       id-token: write
+      actions: read
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - uses: actions/download-artifact@v7
+      - name: Download Bandit reports
+        uses: actions/download-artifact@v7
         with:
-          name: tasks-api-3.12-bandit-report
+          pattern: "*-3.12-bandit-report"
           path: _site
-      - run: |
+          merge-multiple: true
+
+      - name: Create index page
+        run: |
           cat > _site/index.html << 'EOF'
-          <h1>Bandit reports</h1>
-          <p><a href="tasks-api-3.12-bandit-report.html">tasks-api</a></p>
-          <p><a href="title-normalizer-3.12-bandit-report.html">title-normalizer</a></p>
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>Bandit Security Reports</title>
+          </head>
+          <body>
+            <h1>Bandit Security Reports</h1>
+            <ul>
+              <li><a href="tasks-api-3.12-bandit-report.html">tasks-api</a></li>
+              <li><a href="title-normalizer-3.12-bandit-report.html">title-normalizer</a></li>
+            </ul>
+          </body>
+          </html>
           EOF
-      -  uses: actions/upload-pages-artifact@v5
-         with:
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
           path: _site
-          retention-days: 2
-      - id: deployment
-        uses: actions/deploy-pages@v4 
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
