@@ -48,10 +48,9 @@ jobs:
         with:
           name: tasks-api-3.12-bandit-report
           path: _site/index.html
-      - uses: actions/upload-pages-artifact@v5
-        with:
+      -  uses: actions/upload-pages-artifact@v5
+         with:
           path: _site
           retention-days: 2
       - id: deployment
-        uses: actions/deploy-pages@v4
-        
+        uses: actions/deploy-pages@v4 
